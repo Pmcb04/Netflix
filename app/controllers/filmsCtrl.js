@@ -2,7 +2,7 @@ import Film from '../models/film.js'
 
 //GET - Return all films in the DB
 export function findAllFilms (req, res) {
-  Film.find()
+  Film.find().cache()
     .then((listFilms) => {
       res.status(200).json({ films: listFilms })
     })
@@ -13,9 +13,8 @@ export function findAllFilms (req, res) {
 
 //GET - Return a Film with specified show_id
 export function findByShowId (req, res) {
-  Film.find({show_id : req.params.show_id})
+  Film.find({show_id : req.params.show_id}).cache()
   .then((listFilms) => {
-    console.log("GET /films method findAllFilms");
     res.status(200).json({ films: listFilms })
   })
   .catch( err => {

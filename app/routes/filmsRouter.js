@@ -1,5 +1,5 @@
 import express from 'express'
-import { findAllFilms, findByShowId } from '../controllers/filmsCtrl.js';
+import { findAllFilms, findByShowId} from '../controllers/filmsCtrl.js';
 
 var router = new express.Router()
 

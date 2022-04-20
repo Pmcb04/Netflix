@@ -5,8 +5,7 @@ import mongoose from 'mongoose';
 import logger from 'morgan';
 import filmsRouter from './routes/filmsRouter.js';
 import env from './config/environment.js'
-
-
+import './utils/redis.js'
 
 // set up dependencies
 const app = express();
