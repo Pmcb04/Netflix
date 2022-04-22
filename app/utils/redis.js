@@ -18,7 +18,7 @@ const exec = mongoose.Query.prototype.exec;
 mongoose.Query.prototype.cache = function(options = { time: 60 }) {
   this.useCache = true;
   this.time = options.time;
-  this.hashKey = JSON.stringify(options.key || this.mongooseCollection.name);
+  this.hashKey = JSON.stringify(this.mongooseCollection.name);
 
   return this;
 };
@@ -32,7 +32,12 @@ mongoose.Query.prototype.exec = async function() {
     ...this.getQuery()
   });
 
+  console.log("HASHKEY -> ", this.hashKey)
+  console.log("KEY -> ", key) 
+
   const cacheValue = await client.hGet(this.hashKey, key);
+
+  console.log("cacheValue -> ", cacheValue)
 
   if (cacheValue) {
     const doc = JSON.parse(cacheValue);
@@ -43,10 +48,13 @@ mongoose.Query.prototype.exec = async function() {
       : new this.model(doc);
   }
 
-  const result = await exec.apply(this, arguments);
-  console.log(this.time);
-  client.hSet(this.hashKey, key, JSON.stringify(result));
-  client.expire(this.hashKey, this.time);
+  var result = await exec.apply(this, arguments);
+  console.log("RESULT -> ", result)
+
+  result = result.map(d => new this.model(d))
+
+  client.hSet(this.hashKey, key, JSON.stringify(result)); // creamos el hash para almacenar las peliculas
+  client.expire(this.hashKey, this.time); // ponemos un tiempo para que se borre el hash al finalizarlo
 
   console.log("Response from MongoDB");
   return result;
