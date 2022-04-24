@@ -1,18 +1,20 @@
 {
   "name": "netflix",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Proyecto realizado en la asignatura Minería de datos y almacénes de datos (MDAD) en el curso 2021/2022",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Pmcb04/Netflix.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Pedro Miguel Carmona Broncano && Ruben Marín Lucas",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Pmcb04/Netflix/issues"
@@ -26,6 +28,7 @@
     "mongodb": "^4.4.1",
     "mongoose": "^6.2.9",
     "morgan": "^1.10.0",
+    "nodemon": "^2.0.15",
     "redis": "^4.0.6"
   }
 }

@@ -23,14 +23,17 @@ mongoose.connect(env.mongodb.uri)
   });
   
 // set up port
-const port = 3000;
+const port = env.express.port;
 
 // set up route
 app.use("/api/films", filmsRouter)
 
-const server = app.listen(port, () => {
-  console.log(`Our server is running on port ${port}`);
+app.post("/post", (req, res) => {
+  console.log("Connected to React");
+  res.redirect("/");
 });
+
+const server = app.listen(port, console.log(`Our server is running on port ${port}`));
 
 // close server exit app
 process.on('SIGTERM', () => {
