@@ -1,15 +1,37 @@
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import Film from './Film';
-
-const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const listItems = numbers.map((number) =>  <Film title="test title" number={number}></Film>);
-
+import FilmList from './FilmList';
+import WithListLoading from './WithListLoading';
 function App() {
+  const ListLoading = WithListLoading(FilmList);
+  const [appState, setAppState] = useState({
+    loading: false,
+    films: null,
+  });
+
+  useEffect(() => {
+    setAppState({ loading: true });
+    const apiUrl = `http://localhost:8080/api/films`;
+    fetch(apiUrl)
+      .then((res) => res.json())
+      .then((films) => {
+        console.log(films)
+        setAppState({ loading: false, films: films });
+      });
+  }, [setAppState]);
+
   return (
-    <div className="App">
-      {listItems}
+    <div className='App'>
+
+      <div className='container'>
+        <h1>Best Films</h1>
+      </div>
+
+      <div className='films-container'>
+        <ListLoading isLoading={appState.loading} films={appState.films} />
+      </div>
+
     </div>
   );
 }
-
 export default App;

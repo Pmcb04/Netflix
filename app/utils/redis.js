@@ -32,13 +32,8 @@ mongoose.Query.prototype.exec = async function() {
     ...this.getQuery()
   });
 
-  console.log("HASHKEY -> ", this.hashKey)
-  console.log("KEY -> ", key) 
-
   const cacheValue = await client.hGet(this.hashKey, key);
-
-  console.log("cacheValue -> ", cacheValue)
-
+  
   if (cacheValue) {
     const doc = JSON.parse(cacheValue);
 
@@ -49,7 +44,6 @@ mongoose.Query.prototype.exec = async function() {
   }
 
   var result = await exec.apply(this, arguments);
-  console.log("RESULT -> ", result)
 
   result = result.map(d => new this.model(d))
 

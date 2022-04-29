@@ -6,15 +6,14 @@ function Film(props) {
 
       <div className="cover">
         <div className="number">
-          <text>{props.number}</text>
+          {props.number}
         </div>
       </div>      
 
       <div className="title">
-        <text>{props.title}</text>
+        {props.title}
       </div>
-      
-
+    
     </div>
   );
 }
