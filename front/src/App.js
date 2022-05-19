@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     setAppState({ loading: true });
-    const apiUrl = `http://localhost:8080/api/films`;
+    const apiUrl = `http://localhost:8080/api/films/better`;
     fetch(apiUrl)
       .then((res) => res.json())
       .then((films) => {

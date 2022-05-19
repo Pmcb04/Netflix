@@ -1,0 +1,19 @@
+crear una heuristica que intervenga el score del set y el TTL del hash correspondiente
+
+limitar el set a 30-50 peliculas
+
+poner el hash un EXPIRE de 60 seg por ejemplo
+
+Cuando queramos meter en la tabla de clasificación un elemento nuevo, realizar euristica de este y euristica del ultimo elemento y la mejor euristica se queda.
+
+crear un atributo mas en el hash que sea el numero de veces que se ha llamado a esa peliculas, este número se eliminará cuando se elimine el has correspondiende de la pelicula cuando lo eliminemos de la estructura.
+
+ZCARD para saber que numero de elementos tenemos en el set
+
+ZREM para eliminar un elemto del set 
+
+ZREVRANGE set -1 -1 para obtener el ultimo elemento. 
+
+mirar tambien indices de mongo
+
+podemos poner while true en python para que nunca acabe de pedir peliculas

@@ -6,7 +6,7 @@ const FilmList = (props) => {
   if (!films || films.length === 0) return <p>No films, sorry</p>;
   return (
     <ul>
-      {films.listFilms.map((film, index) => {
+      {films.listFilm.map((film, index) => {
         return (
           <Film number={index+1} title={film.title}></Film>
         );
