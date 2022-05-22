@@ -6,6 +6,8 @@ import logger from 'morgan';
 import filmsRouter from './routes/filmsRouter.js';
 import env from './config/environment.js'
 import './utils/redis.js'
+import { setKey } from './utils/redis.js';
+import { client } from './utils/redis.js';
 
 // set up dependencies
 const app = express();
@@ -27,6 +29,36 @@ const port = env.express.port;
 
 // set up route
 app.use("/api/films", filmsRouter)
+
+
+app.get('/api/better',async(req, res)=>{
+
+  var list_better_films = {}
+
+  await client.zRange(setKey, 0, -1, async function (err, list ) {
+    if (err) throw err;
+
+    for (let i in list.reverse()) {
+
+      var film = await client.hGetAll(list[i]) // obtenemos la pelicula completa
+
+      // preparamos para devolver en formato json
+      var json = {}
+      for (let i = 0; i < film.length; i += 2) {
+        json[film[i]] = film[i+1]
+      }
+
+      list_better_films[i] = json
+    }
+
+
+    if (list_better_films)
+      return res.json({ list_better_films });
+
+  });
+
+})
+
 
 const server = app.listen(port, console.log(`Our server is running on port ${port}`));
 

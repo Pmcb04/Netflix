@@ -14,7 +14,8 @@ const filmScheme = new mongoose.Schema({
     rating: String,
     duration: String,
     listen_in: String,
-    description: String
+    description: String,
+    requests : Number
 });
 
 export default mongoose.model('Film', filmScheme);
