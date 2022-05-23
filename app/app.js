@@ -33,7 +33,7 @@ app.use("/api/films", filmsRouter)
 
 app.get('/api/better',async(req, res)=>{
 
-  var list_better_films = {}
+  var list_better_films = []
 
   await client.zRange(setKey, 0, -1, async function (err, list ) {
     if (err) throw err;
@@ -42,18 +42,21 @@ app.get('/api/better',async(req, res)=>{
 
       var film = await client.hGetAll(list[i]) // obtenemos la pelicula completa
 
-      // preparamos para devolver en formato json
-      var json = {}
-      for (let i = 0; i < film.length; i += 2) {
-        json[film[i]] = film[i+1]
-      }
+      if(!isObjEmpty(film)){
+          // preparamos para devolver en formato json
+          var json = {}
+          for (let i = 0; i < film.length; i += 2) {
+              json[film[i]] = film[i+1]
+          }
 
-      list_better_films[i] = json
+          list_better_films[i] = json
+      }
+      
     }
 
 
     if (list_better_films)
-      return res.json({ list_better_films });
+      return res.status(200).send(list_better_films)
 
   });
 
@@ -68,3 +71,7 @@ process.on('SIGTERM', () => {
     console.log('Process terminated')
   })
 })
+
+function isObjEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}

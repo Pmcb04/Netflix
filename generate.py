@@ -21,7 +21,7 @@ with open('netflix_titles.csv', newline='') as File:
 
     i = 0
     while True:
-        if(randint(0, 1) >= 0.5 and visited):
+        if(randint(0, 1) >= 0.2 and visited):
             film = random.choice(visited)
             print("repe request of film ", film)
         else:

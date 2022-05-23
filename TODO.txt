@@ -16,4 +16,45 @@ ZREVRANGE set -1 -1 para obtener el ultimo elemento.
 
 mirar tambien indices de mongo
 
+
 podemos poner while true en python para que nunca acabe de pedir peliculas
+
+
+
+ 1) "s1824"
+ 2) "s8778"
+ 3) "s4336"
+ 4) "s273"
+ 5) "s3295"
+ 6) "s2088"
+ 7) "s4072"
+ 8) "s500"
+ 9) "s3997"
+10) "s7718"
+11) "s4595"
+12) "s6509"
+13) "s7019"
+14) "s8807"
+15) "s7633"
+16) "s4478"
+17) "s6513"
+18) "s5665"
+19) "s813"
+20) "s6739"
+21) "s94"
+22) "s6779"
+23) "s4057"
+24) "s1905"
+25) "s5731"
+26) "s1110"
+27) "s4190"
+28) "s5481"
+29) "s1716"
+30) "s2048"
+31) "s635"
+32) "s1390"
+33) "s1938"
+34) "s4419"
+35) "s6719"
+36) "s7507"
+37) "s2717"

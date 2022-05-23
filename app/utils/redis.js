@@ -20,6 +20,7 @@ client.exists = util.promisify(client.exists)
 client.zPopMin = util.promisify(client.zPopMin)
 client.ttl = util.promisify(client.ttl)
 client.zScore = util.promisify(client.zScore)
+client.zRem = util.promisify(client.zRem)
 
 const exec = mongoose.Query.prototype.exec;
 export const setKey = "set"
@@ -123,13 +124,15 @@ mongoose.Query.prototype.exec = async function() {
         var ttl = await client.ttl(list[i])
         var heuristics = 0
         if(ttl == -2){ // ya no existe el elemento
-          heuristics = calculateHeuristics(await client.zScore(setKey, list[i]), ttl) 
+          var number = await client.zRem(setKey, list[i]) // borramos del dataset el elemento ya que no existe
+          console.log("borrado? ", number, " elemento del dataset por no existir ", list[i])
         }else{
-          heuristics = calculateHeuristics(await client.hGet(list[i], "requests"), ttl) 
+          heuristics = calculateHeuristics(await client.hGet(list[i], "requests"), ttl)  // recalculamos la heuristica en cada fase
+          await client.zIncrBy(setKey, heuristics, list[i]) // incrementamos con la nueva heuristica
         }
-        await client.zIncrBy(setKey, heuristics, list[i]) // calculamos la heuristica de todos los elementos de la lista
-          
-        console.log(i, " : " , list[i], " : ", await client.zScore(setKey, list[i]))
+        
+        // Descomentar para ver scores de la tabla de clasificación   
+        // console.log(i, " : " , list[i], " : ", await client.zScore(setKey, list[i]))
     }
 
   });
