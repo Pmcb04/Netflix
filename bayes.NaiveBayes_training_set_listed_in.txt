@@ -1,0 +1,85 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.bayes.BayesNet -D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5
+Relation:     Netflix
+Instances:    2716
+Attributes:   10
+              show_id
+              type
+              title
+              director
+              country
+              date_added
+              release_year
+              rating
+              duration
+              listed_in
+Test mode:    evaluate on training data
+
+=== Classifier model (full training set) ===
+
+Bayes Network Classifier
+not using ADTree
+#attributes=10 #classindex=9
+Network structure (nodes followed by parents)
+show_id(2716): listed_in 
+type(2): listed_in 
+title(2716): listed_in 
+director(2021): listed_in 
+country(5): listed_in 
+date_added(1114): listed_in 
+release_year(4): listed_in 
+rating(14): listed_in 
+duration(166): listed_in 
+listed_in(9): 
+LogScore Bayes: -108127.65296732314
+LogScore BDeu: -1074387.5904811963
+LogScore MDL: -713899.8154819408
+LogScore ENTROPY: -402568.9715729662
+LogScore AIC: -481317.97157296614
+
+
+Time taken to build model: 0.01 seconds
+
+=== Evaluation on training set ===
+
+Time taken to test model on training data: 0.01 seconds
+
+=== Summary ===
+
+Correctly Classified Instances        2676               98.5272 %
+Incorrectly Classified Instances        40                1.4728 %
+Kappa statistic                          0.9826
+Mean absolute error                      0.0155
+Root mean squared error                  0.0577
+Relative absolute error                  8.2394 %
+Root relative squared error             18.8168 %
+Total Number of Instances             2716     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,982    0,006    0,962      0,982    0,972      0,967    1,000     0,999     action_and_adventure
+                 0,997    0,003    0,979      0,997    0,988      0,986    1,000     0,999     children_and_family_movies
+                 1,000    0,001    0,943      1,000    0,971      0,971    1,000     0,998     classic_movies
+                 0,996    0,002    0,989      0,996    0,992      0,991    1,000     1,000     comedies
+                 1,000    0,000    1,000      1,000    1,000      1,000    1,000     1,000     crime_tv_shows
+                 0,964    0,002    0,992      0,964    0,978      0,973    0,999     0,998     documentaries
+                 0,989    0,002    0,993      0,989    0,991      0,989    1,000     1,000     dramas
+                 0,993    0,000    1,000      0,993    0,997      0,996    1,000     1,000     horror_movies
+                 0,982    0,001    0,991      0,982    0,987      0,985    0,999     0,995     stand_up_comedy
+Weighted Avg.    0,985    0,002    0,985      0,985    0,985      0,983    1,000     0,999     
+
+=== Confusion Matrix ===
+
+   a   b   c   d   e   f   g   h   i   <-- classified as
+ 377   2   1   0   0   2   2   0   0 |   a = action_and_adventure
+   0 332   0   0   0   0   1   0   0 |   b = children_and_family_movies
+   0   0  50   0   0   0   0   0   0 |   c = classic_movies
+   1   0   0 457   0   0   0   0   1 |   d = comedies
+   0   0   0   0  29   0   0   0   0 |   e = crime_tv_shows
+   8   4   2   3   0 514   1   0   1 |   f = documentaries
+   3   1   0   0   0   2 549   0   0 |   g = dramas
+   1   0   0   0   0   0   0 146   0 |   h = horror_movies
+   2   0   0   2   0   0   0   0 222 |   i = stand_up_comedy
+

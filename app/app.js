@@ -35,7 +35,7 @@ app.get('/api/better',async(req, res)=>{
 
   var list_better_films = []
 
-  await client.zRange(setKey, 0, -1, async function (err, list ) {
+  await client.zRange(setKey, 0, -1, async function (err, list ) { // cogemos solo las 10 primeras peliculas
     if (err) throw err;
 
     for (let i in list.reverse()) {

@@ -1,3 +1,5 @@
+import { generateKey } from 'crypto';
+import { Server } from 'http';
 import mongoose from 'mongoose';
 import redis from "redis";
 import util from "util";
@@ -40,7 +42,7 @@ function calculateHeuristics(request, ttl) {
 
 mongoose.Query.prototype.exec = async function() {
   if (!this.useCache) {
-    return await exec.apply(this, arguments);
+    return await exec.apply(this, arguments); // devuelve directamente desde mongoDB
   }
 
   var filmKey = this.getQuery(); // {"show_id" : "s34"}
@@ -53,15 +55,34 @@ mongoose.Query.prototype.exec = async function() {
 
   console.log("IN CACHE? -> ", cacheValue)
 
-  var number_films_cache = await client.zCard(setKey)
-  console.log("en el set hay ", number_films_cache )
+
+  // recalculamos la heuristica de toda la tabla de clasificación
+  await client.zRange(setKey, 0, -1,  async function (err, list ) {
+    if (err) throw err;
+
+    for(let i in list.reverse()){
+
+        var ttl = await client.ttl(list[i])
+        var heuristics = 0
+        if(ttl == -2){ // ya no existe el elemento
+          var number = await client.zRem(setKey, list[i]) // borramos del dataset el elemento ya que no existe
+          console.log("borrado? ", number, " elemento del dataset por no existir ", list[i])
+        }else{
+          heuristics = calculateHeuristics(await client.hGet(list[i], "requests"), ttl)  // recalculamos la heuristica en cada fase
+          await client.zIncrBy(setKey, heuristics, list[i]) // incrementamos con la nueva heuristica
+        }
+        
+        // Descomentar para ver scores de la tabla de clasificación   
+        // console.log(i, " : " , list[i], " : ", await client.zScore(setKey, list[i]))
+    }
+
+  });
+
 
   if (cacheValue) {
     var requests = JSON.parse(await client.hGet(filmKey, "requests")); // obtenemos el numero de peticiones 
     client.hSet(filmKey, "requests", JSON.stringify(requests + 1)); // aumentamos en uno el numero de peticicones 
     client.expire(filmKey, time) // volvemos a ponerle time de vida a la pelicula que se acaba de pedir
-
-    client.zIncrBy(setKey, 1, filmKey) // ponemos la nueva euristica en el set para esa pelicula en concreto
 
     var film = await client.hGetAll(filmKey) // obtenemos la pelicula completa
 
@@ -99,10 +120,13 @@ mongoose.Query.prototype.exec = async function() {
   });
 
   // client.hSet(hashKey, filmKey, film_JSON); // creamos el hash para almacenar las peliculas
-  client.zAdd(setKey, 1, filmKey) // actualizamos en la tabla de clasificación esa película
+  client.zAdd(setKey,calculateHeuristics(1, 60), filmKey) // actualizamos en la tabla de clasificación esa película
+  client.expire(filmKey, time); // ponemos un tiempo para que se borre el hash al finalizarlo
 
+  var number_films_cache = await client.zCard(setKey)
+  console.log("en el set hay ", number_films_cache )
  
-  if(number_films_cache >= MAX_CACHE_ITEMS ){
+  if(number_films_cache > MAX_CACHE_ITEMS ){
     const element_del = await client.zPopMin(setKey) // quitamos el elemento mas bajo en la tabla de clasificación
     console.log("HASH ", element_del[0], " EXISTE ANTES BORRAR ", await client.exists(element_del[0]))
     await client.del(element_del[0]) // Borramos tambien el elemento en el hash
@@ -111,39 +135,9 @@ mongoose.Query.prototype.exec = async function() {
     number_films_cache = await client.zCard(setKey) 
     console.log("en el set hay despues de borrar", number_films_cache)
   }
- 
-
-  client.expire(filmKey, time); // ponemos un tiempo para que se borre el hash al finalizarlo
-
-  // recalculamos la heuristica de toda la tabla de clasificación
-  await client.zRange(setKey, 0, -1,  async function (err, list ) {
-    if (err) throw err;
-
-    for(let i in list.reverse()){
-
-        var ttl = await client.ttl(list[i])
-        var heuristics = 0
-        if(ttl == -2){ // ya no existe el elemento
-          var number = await client.zRem(setKey, list[i]) // borramos del dataset el elemento ya que no existe
-          console.log("borrado? ", number, " elemento del dataset por no existir ", list[i])
-        }else{
-          heuristics = calculateHeuristics(await client.hGet(list[i], "requests"), ttl)  // recalculamos la heuristica en cada fase
-          await client.zIncrBy(setKey, heuristics, list[i]) // incrementamos con la nueva heuristica
-        }
-        
-        // Descomentar para ver scores de la tabla de clasificación   
-        // console.log(i, " : " , list[i], " : ", await client.zScore(setKey, list[i]))
-    }
-
-  });
 
   console.log("Response from MongoDB");
   console.log("**************************")
 
   return result[0];
 };
-
-
-export function clearKey(hashKey) {
-  client.del(JSON.stringify(hashKey));
-}

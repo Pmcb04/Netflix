@@ -1,0 +1,77 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.bayes.BayesNet -D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5
+Relation:     Netflix
+Instances:    2716
+Attributes:   10
+              show_id
+              type
+              title
+              director
+              country
+              date_added
+              release_year
+              rating
+              duration
+              listed_in
+Test mode:    evaluate on training data
+
+=== Classifier model (full training set) ===
+
+Bayes Network Classifier
+not using ADTree
+#attributes=10 #classindex=4
+Network structure (nodes followed by parents)
+show_id(2716): country 
+type(2): country 
+title(2716): country 
+director(2021): country 
+country(5): 
+date_added(1114): country 
+release_year(2): country 
+rating(14): country 
+duration(166): country 
+listed_in(9): country 
+LogScore Bayes: -112232.42809795661
+LogScore BDeu: -623384.883287296
+LogScore MDL: -446160.672236657
+LogScore ENTROPY: -273161.31480211386
+LogScore AIC: -316920.31480211386
+
+
+Time taken to build model: 0.01 seconds
+
+=== Evaluation on training set ===
+
+Time taken to test model on training data: 0.01 seconds
+
+=== Summary ===
+
+Correctly Classified Instances        2685               98.8586 %
+Incorrectly Classified Instances        31                1.1414 %
+Kappa statistic                          0.9678
+Mean absolute error                      0.0291
+Root mean squared error                  0.0775
+Relative absolute error                 20.6871 %
+Root relative squared error             29.2633 %
+Total Number of Instances             2716     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,990    0,013    0,997      0,990    0,993      0,968    0,998     1,000     united states
+                 0,988    0,001    0,991      0,988    0,990      0,988    0,998     0,997     united kingdom
+                 0,974    0,004    0,917      0,974    0,945      0,943    0,998     0,986     spain
+                 0,987    0,003    0,917      0,987    0,951      0,950    1,000     0,998     france
+                 0,968    0,001    0,882      0,968    0,923      0,923    1,000     0,988     italy
+Weighted Avg.    0,989    0,010    0,989      0,989    0,989      0,968    0,998     0,998     
+
+=== Confusion Matrix ===
+
+    a    b    c    d    e   <-- classified as
+ 2136    2    9    7    4 |    a = united states
+    3  331    1    0    0 |    b = united kingdom
+    2    1  111    0    0 |    c = spain
+    1    0    0   77    0 |    d = france
+    1    0    0    0   30 |    e = italy
+
